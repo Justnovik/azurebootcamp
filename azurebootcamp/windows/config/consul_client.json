@@ -1,0 +1,20 @@
+
+{
+  "client_addr": "0.0.0.0",
+  "data_dir": "C:\\opt\\consul\\data",
+  "ui_dir": "C:\\opt\\consul\\ui",
+  "enable_syslog": false,
+  "log_level": "DEBUG",
+  "node_name": "AzureBootcamp",
+  "ports": {
+    "dns": 8600,
+    "http": 8500,
+    "rpc": 8400,
+    "serf_lan": 8301,
+    "serf_wan": 8302,
+    "server": 8300
+  },
+  "server": false,
+  "verify_incoming": false,
+  "verify_outgoing": false
+}

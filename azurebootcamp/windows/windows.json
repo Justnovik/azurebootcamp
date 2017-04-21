@@ -1,0 +1,66 @@
+{
+"variables": {
+    "client_id": "",
+    "client_secret": "",
+    "resource_group": "global-azure-bootcamp-kharkiv",
+    "storage_account": "globalazurebootcampstor",
+    "subscription_id": "",
+    "object_id": "",
+    "tenant_id": "",
+    "scripts_dir":       "scripts",
+    "consul_config_dir": "config"
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "resource_group_name": "{{user `resource_group`}}",
+    "storage_account": "{{user `storage_account`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+    "object_id": "{{user `object_id`}}",
+    "tenant_id": "{{user `tenant_id`}}",
+
+    "capture_container_name": "images",
+    "capture_name_prefix": "WindowsAzureBootcamp-",
+
+    "os_type": "Windows",
+    "image_publisher": "MicrosoftWindowsServer",
+    "image_offer": "WindowsServer",
+    "image_sku": "2012-R2-Datacenter",
+    "image_version": "latest", 
+
+    "communicator": "winrm",
+    "winrm_use_ssl": "true",
+    "winrm_insecure": "true",
+    "winrm_timeout": "5m",
+    "winrm_username": "packer",
+
+    "location": "West US 2",
+    "vm_size": "Standard_D3_v2"
+  }],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "scripts": [
+        "{{user `scripts_dir`}}/install_windows_updates.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_command": "powershell \"& {(Get-WmiObject win32_operatingsystem).LastBootUpTime > C:\\ProgramData\\lastboot.txt; Restart-Computer -force}\"",
+      "restart_check_command": "powershell -command \"& {if ((get-content C:\\ProgramData\\lastboot.txt) -eq (Get-WmiObject win32_operatingsystem).LastBootUpTime) {Write-Output 'Waiting for restart'; start-sleep 600} else {Write-Output 'Restart complete'}}\""
+    },
+    {
+      "type": "file",
+      "source": "{{user `scripts_dir`}}/consul_client.json",
+      "destination": "{{user `consul_config_dir`}}\\config.json"
+    },
+    { 
+      "type": "powershell",
+      "scripts": [
+        "{{user `scripts_dir`}}/install_consul.ps1"
+      ]
+    }
+  ]
+}
