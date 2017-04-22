@@ -22,7 +22,7 @@
     "tenant_id": "{{user `tenant_id`}}",
 
     "capture_container_name": "images",
-    "capture_name_prefix": "WindowsAzureBootcamp-",
+    "capture_name_prefix": "WindowsAzureBootcamp",
 
     "os_type": "Windows",
     "image_publisher": "MicrosoftWindowsServer",
@@ -53,8 +53,8 @@
     },
     {
       "type": "file",
-      "source": "{{user `scripts_dir`}}/consul_client.json",
-      "destination": "{{user `consul_config_dir`}}\\config.json"
+      "source": "{{user `consul_config_dir`}}/consul_client.json",
+      "destination": "C:\\etc\\consul.d\\config.json"
     },
     { 
       "type": "powershell",
